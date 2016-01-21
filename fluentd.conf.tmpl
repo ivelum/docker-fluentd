@@ -42,7 +42,7 @@
     include_time_key true
     {{ if $usingECS }}
       log_group_name "{{ index $value.Labels "com.amazonaws.ecs.task-definition-family" }}_#{ENV['LOG_ENVIRONMENT']}"
-      log_stream_name {{ index $value.Labels "com.amazonaws.ecs.container-name" }}_{{ $containerId }}
+      log_stream_name {{ index $value.Labels "com.amazonaws.ecs.container-name" }}_{{ index $value.Labels "com.amazonaws.ecs.task-definition-version" }}
     {{ else if $usingDockerCompose }}
       log_group_name "{{ index $value.Labels "com.docker.compose.project" }}_#{ENV['LOG_ENVIRONMENT']}"
       log_stream_name {{ index $value.Labels "com.docker.compose.service" }}_{{ $containerId }}
