@@ -1,3 +1,22 @@
+<source>
+  type tail
+  path /host_log/messages
+  pos_file /tmp/messages.pos # to store last read position
+  time_format %b %d %H:%M:%S
+  format /^(?<time>[^ ]* [^ ]* [^ ]*) (?<host>[^ ]*) (?<ident>[a-zA-Z0-9_\/\.\-]*)\: \[\s*(?<offset>[\d\.]*)\]\s*(?<message>.*)$/
+  tag host.messages
+  refresh_interval 5
+  rotate_wait 5
+</source>
+
+<match host.messages>
+  type cloudwatch_logs
+  auto_create_stream true
+  include_time_key true
+  log_group_name "#{ENV['PROJECT']}_host_#{ENV['LOG_ENVIRONMENT']}"
+  log_stream_name messages
+</match>
+
 {{range $key, $value := .}}
   {{ $containerId := $value.ID }}
   {{ $containerImage := $value.Image }}
